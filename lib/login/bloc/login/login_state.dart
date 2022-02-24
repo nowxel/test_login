@@ -12,7 +12,7 @@ class LoginState extends Equatable {
   final Username username;
   final Password password;
 
-  late final bool hidePassword;
+  bool hidePassword;
 
   LoginState copyWith({
     FormzStatus? status,

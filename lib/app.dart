@@ -5,6 +5,7 @@ import 'package:test_login/packages/user_repository.dart';
 import 'package:test_login/splash/view/splash_page.dart';
 
 import 'authentication/bloc/authentication_bloc.dart';
+import 'home/home.dart';
 import 'home/view/home_page.dart';
 import 'login/view/login_page.dart';
 
@@ -53,7 +54,7 @@ class _AppViewState extends State<AppView> {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
                 _navigator.pushAndRemoveUntil<void>(
-                  HomePage.route(),
+                  BlocResultView.route(),
                       (route) => false,
                 );
                 break;

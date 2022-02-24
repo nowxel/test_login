@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_login/login/bloc/result/result_event.dart';
 
 import '../../authentication/bloc/authentication_bloc.dart';
 import '../../constants.dart';
 import '../../data/dictionary.dart';
+import '../../login/bloc/result/result_bloc.dart';
+import '../../login/bloc/result/result_state.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => HomePage());
   }
 
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late ResultBloc resultBloc;
+  @override
+  void initState() {
+    resultBloc = BlocProvider.of<ResultBloc>(context);
+    resultBloc.add(FetchResultsEvents());
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -50,30 +65,55 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _nameAndSurname(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        final userId = context.select(
-              (AuthenticationBloc bloc) => bloc.state.user.id,
-        );
-        return Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            _requestText(
-              title: Dictionary.string(Dictionary.name),
-              description: userId,
-            ),
-            _requestText(
-              title: Dictionary.string(Dictionary.surname),
-              description: userId,
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-          ],
-        );
-      }
+    return Center(
+      child: BlocListener<ResultBloc, ResultState>(
+        listener: (context, state) {
+          if (state is ResultErrorState) {
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+              ),
+            );
+          }
+        },
+        child: BlocBuilder<ResultBloc, ResultState>(
+          builder: (BuildContext context, ResultState state) {
+            if (state is ResultInitialState) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            else if (state is ResultErrorState) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            else if (state is ResultLoadedState) {
+              return Column(
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  _requestText(
+                    title: Dictionary.string(Dictionary.name),
+                    description: state.results.name,
+                  ),
+                  _requestText(
+                    title: Dictionary.string(Dictionary.surname),
+                    description: state.results.surname,
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                ],
+              );
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
+      ),
     );
   }
 

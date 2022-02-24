@@ -21,8 +21,8 @@ class Dictionary {
 
   static final engDictionary = {
     can_not_be_empty: "Can not be empty",
-    invalid_email: "Email is too short",
-    invalid_password: "Password is too short",
+    invalid_email: "Email can not be empty",
+    invalid_password: "Password can not be empty",
     email: "Email",
     password: "Password",
     error_occurred: "Error occurred",

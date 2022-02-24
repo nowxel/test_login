@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
-class PillWidget extends StatelessWidget {
-  const PillWidget({
+class SocialButtonWidget extends StatelessWidget {
+  const SocialButtonWidget({
     Key? key,
     required this.icon,
   }) : super(key: key);
